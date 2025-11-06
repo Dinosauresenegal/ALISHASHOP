@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALISHASHOP Manager</title>
+    <style>
+        :root {
+            --color-primary: #FF6B35;
+            --color-secondary: #F7931E;
+            --color-success: #4CAF50;
+            --color-danger: #f44336;
+            --color-warning: #ff9800;
+            --color-info: #2196F3;
+            --color-dark: #1a1a1a;
+            --color-light: #f5f5f5;
+            --color-white: #ffffff;
+            --color-border: #e0e0e0;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--color-white);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .nav-tabs {
+            display: flex;
+            background: var(--color-light);
+            overflow-x: auto;
+            border-bottom: 2px solid var(--color-border);
+        }
+        .nav-tab {
+            flex: 1;
+            min-width: 100px;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .nav-tab.active {
+            background: white;
+            color: var(--color-primary);
+            border-bottom: 3px solid var(--color-primary);
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            animation: fadeIn 0.3s;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .stat-card.success {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        }
+        .stat-card.warning {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+        }
+        .stat-card.danger {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+        }
+        .stat-card h3 {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+        .stat-card .value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--color-dark);
+            font-size: 14px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--color-border);
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+        }
+        .btn-success {
+            background: var(--color-success);
+            color: white;
+        }
+        .btn-danger {
+            background: var(--color-danger);
+            color: white;
+        }
+        .btn-block {
+            width: 100%;
+        }
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+            border-radius: 10px;
+            border: 1px solid var(--color-border);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        thead {
+            background: var(--color-light);
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+        }
+        th {
+            font-weight: 600;
+            color: var(--color-dark);
+        }
+        tbody tr:hover {
+            background: #f9f9f9;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .badge-success {
+            background: #e8f5e9;
+            color: var(--color-success);
+        }
+        .badge-warning {
+            background: #fff3e0;
+            color: var(--color-warning);
+        }
+        .badge-danger {
+            background: #ffebee;
+            color: var(--color-danger);
+        }
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .alert-success {
+            background: #e8f5e9;
+            color: var(--color-success);
+            border-left: 4px solid var(--color-success);
+        }
+        .alert-warning {
+            background: #fff3e0;
+            color: var(--color-warning);
+            border-left: 4px solid var(--color-warning);
+        }
+        .alert-danger {
+            background: #ffebee;
+            color: var(--color-danger);
+            border-left: 4px solid var(--color-danger);
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .product-card {
+            border: 2px solid var(--color-border);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .product-card:hover {
+            border-color: var(--color-primary);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .product-card.selected {
+            border-color: var(--color-primary);
+            background: rgba(255, 107, 53, 0.1);
+        }
+        .product-card h4 {
+            font-size: 13px;
+            margin-bottom: 8px;
+            color: var(--color-dark);
+        }
+        .product-card .price {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--color-primary);
+            margin-bottom: 5px;
+        }
+        .product-card .stock {
+            font-size: 12px;
+            color: #666;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-header h2 {
+            font-size: 20px;
+            color: var(--color-dark);
+        }
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+        }
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .search-box input {
+            padding-left: 40px;
+        }
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            max-width: 400px;
+        }
+        .notification {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            margin-bottom: 10px;
+            border-left: 4px solid;
+            animation: slideInFromRight 0.3s;
+        }
+        .notification.success {
+            border-left-color: var(--color-success);
+            background: #e8f5e9;
+        }
+        .notification.error {
+            border-left-color: var(--color-danger);
+            background: #ffebee;
+        }
+        .notification.warning {
+            border-left-color: var(--color-warning);
+            background: #fff3e0;
+        }
+        @keyframes slideInFromRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 22px;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .nav-tab {
+                font-size: 11px;
+                padding: 12px 8px;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            table {
+                font-size: 11px;
+            }
+            th, td {
+                padding: 8px;
+            }
+        }
+        @media (max-width: 480px) {
+            .container {
+                margin: 5px;
+                border-radius: 15px;
+            }
+            .header {
+                padding: 15px 10px;
+            }
+            .header h1 {
+                font-size: 20px;
+            }
+            .nav-tabs {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+            }
+            .nav-tab {
+                min-width: 80px;
+                font-size: 10px;
+                padding: 10px 5px;
+            }
+            .tab-content {
+                padding: 15px;
+            }
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            .product-card {
+                padding: 10px;
+            }
+            .product-card h4 {
+                font-size: 11px;
+            }
+            .modal-content {
+                margin: 10px;
+                padding: 20px;
+                border-radius: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="notification-container" id="notificationContainer"></div>
+    <div class="container">
+        <div class="header">
+            <h1>🛍️ ALISHASHOP Manager</h1>
+            <p>Gestion complète de votre magasin multiservices</p>
+        </div>
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="switchTab('dashboard')">📊 Tableau de Bord</button>
+            <button class="nav-tab" onclick="switchTab('vente')">💰 Vente Rapide</button>
+            <button class="nav-tab" onclick="switchTab('stock')">📦 Stock</button>
+            <button class="nav-tab" onclick="switchTab('services')">💳 Services</button>
+            <button class="nav-tab" onclick="switchTab('achats')">🛒 Achats</button>
+            <button class="nav-tab" onclick="switchTab('rapports')">📈 Rapports</button>
+        </div>
+        <!-- DASHBOARD TAB -->
+        <div id="dashboard" class="tab-content active">
+            <div class="stats-grid">
+                <div class="stat-card success">
+                    <h3>CA Aujourd'hui</h3>
+                    <div class="value" id="caDuJour">0 FCFA</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Ventes du Jour</h3>
+                    <div class="value" id="ventesDuJour">0</div>
+                </div>
+                <div class="stat-card warning">
+                    <h3>Produits en Stock</h3>
+                    <div class="value" id="produitsEnStock">0</div>
+                </div>
+                <div class="stat-card danger">
+                    <h3>Alertes Stock</h3>
+                    <div class="value" id="alertesStock">0</div>
+                </div>
+            </div>
+            <div id="alertesContainer"></div>
+            <h3 style="margin-bottom: 15px;">📈 Top 5 Produits Vendus</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Produit</th>
+                            <th>Quantité</th>
+                            <th>CA Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="topProduits">
+                        <tr>
+                            <td colspan="3" class="empty-state">
+                                <p>Aucune vente enregistrée aujourd'hui</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3 style="margin: 25px 0 15px;">🕒 Dernières Transactions</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Heure</th>
+                            <th>Type</th>
+                            <th>Détails</th>
+                            <th>Montant</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dernieresTransactions">
+                        <tr>
+                            <td colspan="4" class="empty-state">
+                                <p>Aucune transaction aujourd'hui</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- VENTE RAPIDE TAB -->
+        <div id="vente" class="tab-content">
+            <h2 style="margin-bottom: 20px;">💰 Vente Rapide</h2>
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="form-control" id="searchProduit" placeholder="Rechercher un produit...">
+            </div>
+            <div class="product-grid" id="productGrid"></div>
+            <div style="margin-top: 30px; padding: 20px; background: var(--color-light); border-radius: 15px;">
+                <h3 style="margin-bottom: 15px;">🛒 Panier</h3>
+                <div id="panier">
+                    <p style="text-align: center; color: #999;">Panier vide - Sélectionnez des produits</p>
+                </div>
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--color-border);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <strong style="font-size: 18px;">TOTAL:</strong>
+                        <strong style="font-size: 24px; color: var(--color-primary);" id="totalPanier">0 FCFA</strong>
+                    </div>
+                    <button class="btn btn-success btn-block" onclick="validerVente()">✅ Valider la Vente</button>
+                    <button class="btn btn-danger btn-block" style="margin-top: 10px;" onclick="viderPanier()">🗑️ Vider le Panier</button>
+                </div>
+            </div>
+        </div>
+        <!-- STOCK TAB -->
+        <div id="stock" class="tab-content">
+            <h2 style="margin-bottom: 20px;">📦 Gestion du Stock</h2>
+            <button class="btn btn-primary" style="margin-bottom: 20px;" onclick="showModal('addProductModal')">➕ Ajouter un Produit</button>
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="form-control" id="searchStock" placeholder="Rechercher dans le stock...">
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Produit</th>
+                            <th>Prix Vente</th>
+                            <th>Stock</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stockTable"></tbody>
+                </table>
+            </div>
+        </div>
+        <!-- SERVICES TAB -->
+        <div id="services" class="tab-content">
+            <h2 style="margin-bottom: 20px;">💳 Services Financiers & Reprographie</h2>
+            <div style="background: var(--color-light); padding: 20px; border-radius: 15px; margin-bottom: 25px;">
+                <h3 style="margin-bottom: 15px;">📱 Orange Money & Transferts</h3>
+                <div class="form-group">
+                    <label>Nombre de transactions</label>
+                    <input type="number" class="form-control" id="nbTransactions" min="1" value="1">
+                </div>
+                <button class="btn btn-primary btn-block" onclick="enregistrerTransaction()">✅ Enregistrer Transaction</button>
+            </div>
+            <div style="background: var(--color-light); padding: 20px; border-radius: 15px;">
+                <h3 style="margin-bottom: 15px;">🖨️ Reprographie Détaillée</h3>
+                <form id="reprographieForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Photocopies N&B</label>
+                            <input type="number" class="form-control" id="photoNB" min="0" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Prix/page N&B (FCFA)</label>
+                            <input type="number" class="form-control" id="prixNB" min="0" value="25">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Photocopies Couleur</label>
+                            <input type="number" class="form-control" id="photoCouleur" min="0" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Prix/page Couleur (FCFA)</label>
+                            <input type="number" class="form-control" id="prixCouleur" min="0" value="100">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Impressions</label>
+                            <input type="number" class="form-control" id="impressions" min="0" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Prix/impression (FCFA)</label>
+                            <input type="number" class="form-control" id="prixImpression" min="0" value="50">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Reliures/Plastifications</label>
+                            <input type="number" class="form-control" id="reliures" min="0" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Prix/reliure (FCFA)</label>
+                            <input type="number" class="form-control" id="prixReliure" min="0" value="500">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Autres services (description)</label>
+                        <input type="text" class="form-control" id="autresServices" placeholder="Ex: Scan, Agrandissement...">
+                    </div>
+                    <div class="form-group">
+                        <label>Montant autres services (FCFA)</label>
+                        <input type="number" class="form-control" id="montantAutres" min="0" value="0">
+                    </div>
+                    <div style="padding: 15px; background: white; border-radius: 10px; margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong>Total Reprographie:</strong>
+                            <strong style="font-size: 20px; color: var(--color-primary);" id="totalReprographie">0 FCFA</strong>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-success btn-block" onclick="enregistrerReprographie()">✅ Enregistrer Reprographie</button>
+                </form>
+            </div>
+            <h3 style="margin: 30px 0 15px;">📋 Historique Services du Jour</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Heure</th>
+                            <th>Service</th>
+                            <th>Détails</th>
+                            <th>Montant</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historiqueServices"></tbody>
+                </table>
+            </div>
+        </div>
+        <!-- ACHATS TAB -->
+        <div id="achats" class="tab-content">
+            <h2 style="margin-bottom: 20px;">🛒 Gestion des Achats</h2>
+            <button class="btn btn-primary" style="margin-bottom: 20px;" onclick="showModal('addAchatModal')">➕ Enregistrer un Achat</button>
+            <div class="stats-grid" style="margin-bottom: 25px;">
+                <div class="stat-card">
+                    <h3>Achats du Jour</h3>
+                    <div class="value" id="achatsDuJour">0 FCFA</div>
+                </div>
+                <div class="stat-card success">
+                    <h3>Marge Totale</h3>
+                    <div class="value" id="margeTotale">0 FCFA</div>
+                </div>
+            </div>
+            <h3 style="margin-bottom: 15px;">📋 Historique des Achats</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Produit</th>
+                            <th>Fournisseur</th>
+                            <th>Quantité</th>
+                            <th>Prix Achat</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historiqueAchats"></tbody>
+                </table>
+            </div>
+        </div>
+        <!-- RAPPORTS TAB -->
+        <div id="rapports" class="tab-content">
+            <h2 style="margin-bottom: 20px;">📈 Rapports & Statistiques</h2>
+            <div class="form-group">
+                <label>Période</label>
+                <select class="form-control" id="periodeRapport" onchange="genererRapport()">
+                    <option value="jour">Aujourd'hui</option>
+                    <option value="semaine">Cette Semaine</option>
+                    <option value="mois">Ce Mois</option>
+                </select>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card success">
+                    <h3>CA Total</h3>
+                    <div class="value" id="rapportCA">0 FCFA</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Ventes Produits</h3>
+                    <div class="value" id="rapportVentes">0 FCFA</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Services Financiers</h3>
+                    <div class="value" id="rapportServices">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Reprographie</h3>
+                    <div class="value" id="rapportRepro">0 FCFA</div>
+                </div>
+            </div>
+            <h3 style="margin: 25px 0 15px;">🏆 Produits les Plus Vendus</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rang</th>
+                            <th>Produit</th>
+                            <th>Quantité Vendue</th>
+                            <th>CA Généré</th>
+                        </tr>
+                    </thead>
+                    <tbody id="topProduitsRapport"></tbody>
+                </table>
+            </div>
+            <button class="btn btn-primary" style="margin-top: 20px;" onclick="exporterDonnees()">📥 Exporter les Données</button>
+            <button class="btn btn-success" style="margin-top: 10px;" onclick="genererRapportComplet()">📊 Rapport Complet</button>
+        </div>
+    </div>
+    <!-- MODALS -->
+    <div id="addProductModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>➕ Ajouter un Produit</h2>
+                <button class="close-modal" onclick="closeModal('addProductModal')">&times;</button>
+            </div>
+            <form id="addProductForm">
+                <div class="form-group">
+                    <label>Nom du Produit</label>
+                    <input type="text" class="form-control" id="produitNom" required>
+                </div>
+                <div class="form-group">
+                    <label>Prix de Vente (FCFA)</label>
+                    <input type="number" class="form-control" id="produitPrix" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label>Stock Initial</label>
+                    <input type="number" class="form-control" id="produitStock" min="0" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">✅ Ajouter</button>
+            </form>
+        </div>
+    </div>
+    <div id="modifProductModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>✏️ Modifier le Produit</h2>
+                <button class="close-modal" onclick="closeModal('modifProductModal')">&times;</button>
+            </div>
+            <form id="modifProductForm">
+                <input type="hidden" id="modifProduitNomOriginal">
+                <div class="form-group">
+                    <label>Nom du Produit</label>
+                    <input type="text" class="form-control" id="modifProduitNom" required>
+                </div>
+                <div class="form-group">
+                    <label>Prix de Vente (FCFA)</label>
+                    <input type="number" class="form-control" id="modifProduitPrix" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label>Stock</label>
+                    <input type="number" class="form-control" id="modifProduitStock" min="0" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">✅ Enregistrer les Modifications</button>
+            </form>
+        </div>
+    </div>
+    <div id="addAchatModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🛒 Enregistrer un Achat</h2>
+                <button class="close-modal" onclick="closeModal('addAchatModal')">&times;</button>
+            </div>
+            <form id="addAchatForm">
+                <div class="form-group">
+                    <label>Produit</label>
+                    <select class="form-control" id="achatProduit" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Fournisseur</label>
+                    <input type="text" class="form-control" id="achatFournisseur" required>
+                </div>
+                <div class="form-group">
+                    <label>Quantité</label>
+                    <input type="number" class="form-control" id="achatQuantite" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label>Prix d'Achat Unitaire (FCFA)</label>
+                    <input type="number" class="form-control" id="achatPrix" min="0" required>
+                </div>
+                <div style="padding: 15px; background: var(--color-light); border-radius: 10px; margin-bottom: 15px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>Total Achat:</span>
+                        <strong id="totalAchat">0 FCFA</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Marge Prévue:</span>
+                        <strong style="color: var(--color-success);" id="margePrevu">0 FCFA</strong>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success btn-block">✅ Enregistrer l'Achat</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        // Données principales
+        let produits = [];
+        let panier = [];
+        let ventes = [];
+        let services = [];
+        let achats = [];
+        // Générer un ID d'appareil unique (simple)
+        function generateDeviceId() {
+             return 'device_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        // REMPLACER la fonction sauvegarderDonnees() par :
+        async function sauvegarderDonnees() {
+            try {
+                const data = {
+                    produits: produits,
+                    ventes: ventes,
+                    services: services,
+                    achats: achats,
+                    derniereMaj: new Date().toISOString(),
+                    appareil: localStorage.getItem('appareil_id') || generateDeviceId()
+                };
+                // Sauvegarde locale
+                localStorage.setItem('alishashop_data', JSON.stringify(data));
+                // Sauvegarde cloud (Google Sheets)
+                await sauvegarderSurGoogleSheets(data);
+                return true;
+            } catch (e) {
+                console.error('Erreur sauvegarde:', e);
+                return false;
+            }
+        }
+
+        async function sauvegarderSurGoogleSheets(data) {
+            // Utiliser Google Apps Script comme backend gratuit
+            const scriptUrl = 'https://script.google.com/macros/s/AKfycbzDxg6Te0HF78ZME6p4ejlUl025FNk0rTj-EsIM5SRxg99Wl8DIdWNW2TZn97CTJzA7/exec'; // Votre ID intégré
+            try {
+                const response = await fetch(scriptUrl, {
+                    method: 'POST',
+                    mode: 'no-cors', // Important pour contourner CORS
+                    body: JSON.stringify(data)
+                });
+                console.log('✅ Données synchronisées cloud');
+            } catch (error) {
+                console.log('Sauvegarde locale uniquement');
+            }
+        }
+
+        async function chargerDonneesCloud() {
+            try {
+                const scriptUrl = 'https://script.google.com/macros/s/AKfycbzDxg6Te0HF78ZME6p4ejlUl025FNk0rTj-EsIM5SRxg99Wl8DIdWNW2TZn97CTJzA7/exec'; // Votre ID intégré
+                const response = await fetch(scriptUrl);
+                const data = await response.json();
+                if (data && data.produits) {
+                    produits = data.produits;
+                    ventes = data.ventes || [];
+                    services = data.services || [];
+                    achats = data.achats || [];
+                    return true;
+                }
+            } catch (error) {
+                console.log('Chargement cloud échoué, utilisation locale');
+            }
+            return false;
+        }
+
+        // Charger les données (cloud en premier, puis local en fallback)
+        function chargerDonnees() {
+            try {
+                // Charger les données locales
+                const dataStr = localStorage.getItem('alishashop_data');
+                if (dataStr) {
+                    const data = JSON.parse(dataStr);
+                    if (data && typeof data === 'object') {
+                        produits = Array.isArray(data.produits) ? data.produits : [];
+                        ventes = Array.isArray(data.ventes) ? data.ventes : [];
+                        services = Array.isArray(data.services) ? data.services : [];
+                        achats = Array.isArray(data.achats) ? data.achats : [];
+                        console.log('Données chargées localement');
+                        return true;
+                    }
+                }
+                return false;
+            } catch (e) {
+                console.error('Erreur chargement local:', e);
+                return false;
+            }
+        }
+
+        // Initialiser avec les produits de votre facture
+        function initialiserProduitsFacture() {
+            const produitsFacture = [
+                { nom: 'Bluetooth i12', prix: 1500, stock: 10 },
+                { nom: 'Protection Blindé 9D', prix: 200, stock: 50 },
+                { nom: 'Cable USB', prix: 200, stock: 30 },
+                { nom: 'Chargeur iPhone+', prix: 700, stock: 20 },
+                { nom: 'Batterie', prix: 250, stock: 15 },
+                { nom: 'Cable Type-C iPhone', prix: 400, stock: 25 },
+                { nom: 'Écouteurs iPhone', prix: 800, stock: 12 },
+                { nom: 'Bluetooth P9', prix: 2000, stock: 8 },
+                { nom: 'Écouteurs iPhone Spiec', prix: 2000, stock: 4 },
+                { nom: 'A9pro', prix: 4000, stock: 3 },
+                { nom: 'AirPod 4s mini', prix: 3000, stock: 5 },
+                { nom: 'A10pro', prix: 4000, stock: 2 },
+                { nom: 'Pochette ferme tir', prix: 700, stock: 6 },
+                { nom: 'Châssis téléphone', prix: 1000, stock: 3 },
+                { nom: 'Charge auto', prix: 700, stock: 5 },
+                { nom: 'Clé 2G', prix: 1000, stock: 3 }
+            ];
+            // Vérifier si les produits sont déjà initialisés (par exemple, si les données locales sont chargées)
+            if (produits.length === 0) {
+                produits = produitsFacture;
+                sauvegarderDonnees(); // Sauvegarde initiale avec les produits de la facture
+            }
+        }
+
+        // Gestion des onglets
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            if (tabName === 'dashboard') actualiserDashboard();
+            if (tabName === 'vente') afficherProduits();
+            if (tabName === 'stock') afficherStock();
+            if (tabName === 'services') {
+                afficherHistoriqueServices();
+                calculerTotalReprographie();
+            }
+            if (tabName === 'achats') {
+                afficherHistoriqueAchats();
+                actualiserStatsAchats();
+            }
+            if (tabName === 'rapports') genererRapport();
+        }
+
+        // Afficher les produits
+        function afficherProduits(filtre = '') {
+            const grid = document.getElementById('productGrid');
+            const produitsFiltres = produits.filter(p =>
+                p.nom.toLowerCase().includes(filtre.toLowerCase())
+            );
+            if (produitsFiltres.length === 0) {
+                grid.innerHTML = '<div class="empty-state"><p>Aucun produit trouvé</p></div>';
+                return;
+            }
+            grid.innerHTML = produitsFiltres.map(p => `
+                <div class="product-card" onclick="ajouterAuPanier('${p.nom}')">
+                    <h4>${p.nom}</h4>
+                    <div class="price">${formatMontant(p.prix)}</div>
+                    <div class="stock">Stock: ${p.stock}</div>
+                </div>
+            `).join('');
+        }
+
+        // Gestion du panier
+        function ajouterAuPanier(nomProduit) {
+            const produit = produits.find(p => p.nom === nomProduit);
+            if (!produit || produit.stock <= 0) {
+                afficherNotification('Produit en rupture de stock!', 'error');
+                return;
+            }
+            const itemPanier = panier.find(p => p.nom === nomProduit);
+            if (itemPanier) {
+                if (itemPanier.quantite < produit.stock) {
+                    itemPanier.quantite++;
+                } else {
+                    afficherNotification('Stock insuffisant!', 'error');
+                    return;
+                }
+            } else {
+                panier.push({ nom: nomProduit, prix: produit.prix, quantite: 1 });
+            }
+            afficherPanier();
+            afficherNotification(`${produit.nom} ajouté au panier`, 'success');
+        }
+        function afficherPanier() {
+            const panierDiv = document.getElementById('panier');
+            if (panier.length === 0) {
+                panierDiv.innerHTML = '<p style="text-align: center; color: #999;">Panier vide - Sélectionnez des produits</p>';
+                document.getElementById('totalPanier').textContent = '0 FCFA';
+                return;
+            }
+            panierDiv.innerHTML = panier.map(item => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: white; border-radius: 8px; margin-bottom: 10px;">
+                    <div>
+                        <strong>${item.nom}</strong><br>
+                        <small>${formatMontant(item.prix)} x ${item.quantite}</small>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <button onclick="modifierQuantitePanier('${item.nom}', -1)" style="background: var(--color-danger); color: white; border: none; border-radius: 5px; width: 30px; height: 30px; cursor: pointer;">-</button>
+                        <strong>${item.quantite}</strong>
+                        <button onclick="modifierQuantitePanier('${item.nom}', 1)" style="background: var(--color-success); color: white; border: none; border-radius: 5px; width: 30px; height: 30px; cursor: pointer;">+</button>
+                        <button onclick="retirerDuPanier('${item.nom}')" style="background: var(--color-danger); color: white; border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer;">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+            const total = panier.reduce((sum, item) => sum + (item.prix * item.quantite), 0);
+            document.getElementById('totalPanier').textContent = formatMontant(total);
+        }
+        function modifierQuantitePanier(nomProduit, delta) {
+            const itemPanier = panier.find(p => p.nom === nomProduit);
+            const produit = produits.find(p => p.nom === nomProduit);
+            if (!itemPanier || !produit) return;
+            const nouvelleQuantite = itemPanier.quantite + delta;
+            if (nouvelleQuantite <= 0) {
+                retirerDuPanier(nomProduit);
+                return;
+            }
+            if (nouvelleQuantite > produit.stock) {
+                afficherNotification('Stock insuffisant!', 'error');
+                return;
+            }
+            itemPanier.quantite = nouvelleQuantite;
+            afficherPanier();
+        }
+        function retirerDuPanier(nomProduit) {
+            panier = panier.filter(p => p.nom !== nomProduit);
+            afficherPanier();
+        }
+        function viderPanier() {
+            if (panier.length === 0) return;
+            if (confirm('Voulez-vous vraiment vider le panier?')) {
+                panier = [];
+                afficherPanier();
+                afficherNotification('Panier vidé', 'warning');
+            }
+        }
+        function validerVente() {
+            if (panier.length === 0) {
+                afficherNotification('Le panier est vide!', 'error');
+                return;
+            }
+            const total = panier.reduce((sum, item) => sum + (item.prix * item.quantite), 0);
+            // Enregistrer la vente
+            const vente = {
+                date: new Date().toISOString(),
+                items: [...panier],
+                total: total,
+                type: 'vente'
+            };
+            ventes.push(vente);
+            // Mettre à jour le stock
+            panier.forEach(item => {
+                const produit = produits.find(p => p.nom === item.nom);
+                if (produit) {
+                    produit.stock -= item.quantite;
+                }
+            });
+            sauvegarderDonnees(); // Sauvegarde asynchrone
+            panier = [];
+            afficherPanier();
+            afficherProduits();
+            afficherNotification(`Vente validée! Total: ${formatMontant(total)}`, 'success');
+        }
+
+        // Gestion du stock
+        function afficherStock() {
+            const tbody = document.getElementById('stockTable');
+            if (produits.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="empty-state"><p>Aucun produit en stock</p></td></tr>';
+                return;
+            }
+            tbody.innerHTML = produits.map(p => {
+                let badge = '';
+                if (p.stock === 0) {
+                    badge = '<span class="badge badge-danger">Rupture</span>';
+                } else if (p.stock < 5) {
+                    badge = '<span class="badge badge-warning">Stock Bas</span>';
+                } else {
+                    badge = '<span class="badge badge-success">Disponible</span>';
+                }
+                return `
+                    <tr>
+                        <td><strong>${p.nom}</strong></td>
+                        <td>${formatMontant(p.prix)}</td>
+                        <td>${p.stock}</td>
+                        <td>${badge}</td>
+                        <td>
+                            <button onclick="modifierProduit('${p.nom}')" style="background: var(--color-info); color: white; border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer; font-size: 12px; margin-right: 5px;">✏️ Modifier</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        function modifierProduit(nomProduit) {
+            const produit = produits.find(p => p.nom === nomProduit);
+            if (!produit) return;
+            document.getElementById('modifProduitNom').value = produit.nom;
+            document.getElementById('modifProduitPrix').value = produit.prix;
+            document.getElementById('modifProduitStock').value = produit.stock;
+            document.getElementById('modifProduitNomOriginal').value = nomProduit;
+            showModal('modifProductModal');
+        }
+
+        // Services
+        function enregistrerTransaction() {
+            const nb = parseInt(document.getElementById('nbTransactions').value);
+            if (nb < 1) {
+                afficherNotification('Nombre de transactions invalide!', 'error');
+                return;
+            }
+            const transaction = {
+                date: new Date().toISOString(),
+                type: 'orangemoney',
+                nombre: nb,
+                details: `${nb} transaction(s) Orange Money`
+            };
+            services.push(transaction);
+            sauvegarderDonnees(); // Sauvegarde asynchrone
+            document.getElementById('nbTransactions').value = 1;
+            afficherHistoriqueServices();
+            afficherNotification('Transaction enregistrée!', 'success');
+        }
+        function calculerTotalReprographie() {
+            const photoNB = parseInt(document.getElementById('photoNB').value) || 0;
+            const prixNB = parseInt(document.getElementById('prixNB').value) || 0;
+            const photoCouleur = parseInt(document.getElementById('photoCouleur').value) || 0;
+            const prixCouleur = parseInt(document.getElementById('prixCouleur').value) || 0;
+            const impressions = parseInt(document.getElementById('impressions').value) || 0;
+            const prixImpression = parseInt(document.getElementById('prixImpression').value) || 0;
+            const reliures = parseInt(document.getElementById('reliures').value) || 0;
+            const prixReliure = parseInt(document.getElementById('prixReliure').value) || 0;
+            const montantAutres = parseInt(document.getElementById('montantAutres').value) || 0;
+            const total = (photoNB * prixNB) + (photoCouleur * prixCouleur) +
+                         (impressions * prixImpression) + (reliures * prixReliure) + montantAutres;
+            document.getElementById('totalReprographie').textContent = formatMontant(total);
+            return total;
+        }
+        function enregistrerReprographie() {
+            const total = calculerTotalReprographie();
+            if (total === 0) {
+                afficherNotification('Aucun service à enregistrer!', 'error');
+                return;
+            }
+            let details = [];
+            const photoNB = parseInt(document.getElementById('photoNB').value) || 0;
+            const photoCouleur = parseInt(document.getElementById('photoCouleur').value) || 0;
+            const impressions = parseInt(document.getElementById('impressions').value) || 0;
+            const reliures = parseInt(document.getElementById('reliures').value) || 0;
+            const autresServices = document.getElementById('autresServices').value;
+            if (photoNB > 0) details.push(`${photoNB} pages N&B`);
+            if (photoCouleur > 0) details.push(`${photoCouleur} pages Couleur`);
+            if (impressions > 0) details.push(`${impressions} impressions`);
+            if (reliures > 0) details.push(`${reliures} reliures`);
+            if (autresServices) details.push(autresServices);
+            const service = {
+                date: new Date().toISOString(),
+                type: 'reprographie',
+                details: details.join(', '),
+                montant: total
+            };
+            services.push(service);
+            sauvegarderDonnees(); // Sauvegarde asynchrone
+            document.getElementById('reprographieForm').reset();
+            document.getElementById('prixNB').value = 25;
+            document.getElementById('prixCouleur').value = 100;
+            document.getElementById('prixImpression').value = 50;
+            document.getElementById('prixReliure').value = 500;
+            calculerTotalReprographie();
+            afficherHistoriqueServices();
+            afficherNotification('Reprographie enregistrée!', 'success');
+        }
+        function afficherHistoriqueServices() {
+            const tbody = document.getElementById('historiqueServices');
+            const aujourdhui = new Date().toDateString();
+            const servicesJour = services.filter(s => new Date(s.date).toDateString() === aujourdhui);
+            if (servicesJour.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="empty-state"><p>Aucun service enregistré aujourd\'hui</p></td></tr>';
+                return;
+            }
+            tbody.innerHTML = servicesJour.map(s => `
+                <tr>
+                    <td>${new Date(s.date).toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}</td>
+                    <td><span class="badge ${s.type === 'orangemoney' ? 'badge-warning' : 'badge-success'}">${s.type === 'orangemoney' ? '💳 Orange Money' : '🖨️ Reprographie'}</span></td>
+                    <td>${s.details}</td>
+                    <td><strong>${s.montant ? formatMontant(s.montant) : '-'}</strong></td>
+                </tr>
+            `).join('');
+        }
+
+        // Achats
+        function afficherHistoriqueAchats() {
+            const tbody = document.getElementById('historiqueAchats');
+            if (achats.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="empty-state"><p>Aucun achat enregistré</p></td></tr>';
+                return;
+            }
+            tbody.innerHTML = achats.map(a => `
+                <tr>
+                    <td>${new Date(a.date).toLocaleDateString('fr-FR')}</td>
+                    <td><strong>${a.produit}</strong></td>
+                    <td>${a.fournisseur}</td>
+                    <td>${a.quantite}</td>
+                    <td>${formatMontant(a.prixUnitaire)}</td>
+                    <td><strong>${formatMontant(a.total)}</strong></td>
+                </tr>
+            `).join('');
+        }
+        function actualiserStatsAchats() {
+            const aujourdhui = new Date().toDateString();
+            const achatsJour = achats.filter(a => new Date(a.date).toDateString() === aujourdhui);
+            const totalAchats = achatsJour.reduce((sum, a) => sum + a.total, 0);
+            let margeTotale = 0;
+            achats.forEach(achat => {
+                const produit = produits.find(p => p.nom === achat.produit);
+                if (produit) {
+                    const margeUnitaire = produit.prix - achat.prixUnitaire;
+                    margeTotale += margeUnitaire * achat.quantite;
+                }
+            });
+            document.getElementById('achatsDuJour').textContent = formatMontant(totalAchats);
+            document.getElementById('margeTotale').textContent = formatMontant(margeTotale);
+        }
+
+        // Dashboard
+        function actualiserDashboard() {
+            const aujourdhui = new Date().toDateString();
+            const ventesJour = ventes.filter(v => new Date(v.date).toDateString() === aujourdhui);
+            const caVentes = ventesJour.reduce((sum, v) => sum + v.total, 0);
+            const servicesJour = services.filter(s => new Date(s.date).toDateString() === aujourdhui);
+            const caServices = servicesJour.reduce((sum, s) => sum + (s.montant || 0), 0);
+            const caTotal = caVentes + caServices;
+            document.getElementById('caDuJour').textContent = formatMontant(caTotal);
+            document.getElementById('ventesDuJour').textContent = ventesJour.length;
+            document.getElementById('produitsEnStock').textContent = produits.length;
+            const alertes = produits.filter(p => p.stock < 5);
+            document.getElementById('alertesStock').textContent = alertes.length;
+            const alertesContainer = document.getElementById('alertesContainer');
+            if (alertes.length > 0) {
+                alertesContainer.innerHTML = `
+                    <div class="alert alert-warning">
+                        <strong>⚠️ Attention!</strong> ${alertes.length} produit(s) en stock faible: ${alertes.map(p => p.nom).join(', ')}
+                    </div>
+                `;
+            } else {
+                alertesContainer.innerHTML = '';
+            }
+            afficherTopProduits();
+            afficherDernieresTransactions();
+        }
+        function afficherTopProduits() {
+            const tbody = document.getElementById('topProduits');
+            const aujourdhui = new Date().toDateString();
+            const ventesJour = ventes.filter(v => new Date(v.date).toDateString() === aujourdhui);
+            if (ventesJour.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" class="empty-state"><p>Aucune vente enregistrée aujourd\'hui</p></td></tr>';
+                return;
+            }
+            const ventesParProduit = {};
+            ventesJour.forEach(vente => {
+                vente.items.forEach(item => {
+                    if (!ventesParProduit[item.nom]) {
+                        ventesParProduit[item.nom] = { quantite: 0, ca: 0 };
+                    }
+                    ventesParProduit[item.nom].quantite += item.quantite;
+                    ventesParProduit[item.nom].ca += item.prix * item.quantite;
+                });
+            });
+            const top5 = Object.entries(ventesParProduit)
+                .sort((a, b) => b[1].ca - a[1].ca)
+                .slice(0, 5);
+            tbody.innerHTML = top5.map(([nom, data]) => `
+                <tr>
+                    <td><strong>${nom}</strong></td>
+                    <td>${data.quantite}</td>
+                    <td><strong>${formatMontant(data.ca)}</strong></td>
+                </tr>
+            `).join('');
+        }
+        function afficherDernieresTransactions() {
+            const tbody = document.getElementById('dernieresTransactions');
+            const aujourdhui = new Date().toDateString();
+            const toutesTransactions = [
+                ...ventes.filter(v => new Date(v.date).toDateString() === aujourdhui).map(v => ({
+                    date: v.date,
+                    type: 'Vente',
+                    details: `${v.items.length} article(s)`,
+                    montant: v.total
+                })),
+                ...services.filter(s => new Date(s.date).toDateString() === aujourdhui).map(s => ({
+                    date: s.date,
+                    type: s.type === 'orangemoney' ? 'Orange Money' : 'Reprographie',
+                    details: s.details,
+                    montant: s.montant || 0
+                }))
+            ].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 10);
+            if (toutesTransactions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="empty-state"><p>Aucune transaction aujourd\'hui</p></td></tr>';
+                return;
+            }
+            tbody.innerHTML = toutesTransactions.map(t => `
+                <tr>
+                    <td>${new Date(t.date).toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}</td>
+                    <td><span class="badge badge-${t.type === 'Vente' ? 'success' : 'info'}">${t.type}</span></td>
+                    <td>${t.details}</td>
+                    <td><strong>${formatMontant(t.montant)}</strong></td>
+                </tr>
+            `).join('');
+        }
+
+        // Rapports
+        function genererRapport() {
+            const periode = document.getElementById('periodeRapport').value;
+            let dateDebut = new Date();
+            if (periode === 'semaine') {
+                dateDebut.setDate(dateDebut.getDate() - 7);
+            } else if (periode === 'mois') {
+                dateDebut.setMonth(dateDebut.getMonth() - 1);
+            } else {
+                dateDebut = new Date(dateDebut.toDateString());
+            }
+            const ventesPeriode = ventes.filter(v => new Date(v.date) >= dateDebut);
+            const servicesPeriode = services.filter(s => new Date(s.date) >= dateDebut);
+            const caVentes = ventesPeriode.reduce((sum, v) => sum + v.total, 0);
+            const caServices = servicesPeriode.reduce((sum, s) => sum + (s.montant || 0), 0);
+            const nbTransactions = servicesPeriode.filter(s => s.type === 'orangemoney').reduce((sum, s) => sum + s.nombre, 0);
+            document.getElementById('rapportCA').textContent = formatMontant(caVentes + caServices);
+            document.getElementById('rapportVentes').textContent = formatMontant(caVentes);
+            document.getElementById('rapportServices').textContent = nbTransactions;
+            document.getElementById('rapportRepro').textContent = formatMontant(caServices);
+            const ventesParProduit = {};
+            ventesPeriode.forEach(vente => {
+                vente.items.forEach(item => {
+                    if (!ventesParProduit[item.nom]) {
+                        ventesParProduit[item.nom] = { quantite: 0, ca: 0 };
+                    }
+                    ventesParProduit[item.nom].quantite += item.quantite;
+                    ventesParProduit[item.nom].ca += item.prix * item.quantite;
+                });
+            });
+            const top = Object.entries(ventesParProduit)
+                .sort((a, b) => b[1].ca - a[1].ca)
+                .slice(0, 10);
+            const tbody = document.getElementById('topProduitsRapport');
+            if (top.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="empty-state"><p>Aucune vente pour cette période</p></td></tr>';
+            } else {
+                tbody.innerHTML = top.map(([nom, data], index) => `
+                    <tr>
+                        <td><strong>${index + 1}</strong></td>
+                        <td>${nom}</td>
+                        <td>${data.quantite}</td>
+                        <td><strong>${formatMontant(data.ca)}</strong></td>
+                    </tr>
+                `).join('');
+            }
+        }
+        function genererRapportComplet() {
+            const rapport = {
+                date: new Date().toLocaleDateString('fr-FR'),
+                produits: produits.length,
+                ventesTotal: ventes.reduce((sum, v) => sum + v.total, 0),
+                servicesTotal: services.reduce((sum, s) => sum + (s.montant || 0), 0),
+                achatsTotal: achats.reduce((sum, a) => sum + a.total, 0),
+                topProduits: produits
+                    .map(p => ({
+                        nom: p.nom,
+                        stock: p.stock,
+                        prix: p.prix,
+                        valeurStock: p.stock * p.prix
+                    }))
+                    .sort((a, b) => b.valeurStock - a.valeurStock)
+                    .slice(0, 5)
+            };
+            const content = `
+RAPPORT COMPLET ALISHASHOP
+Date: ${rapport.date}
+📊 STATISTIQUES GÉNÉRALES
+• Produits en stock: ${rapport.produits}
+• Chiffre d'affaires total: ${formatMontant(rapport.ventesTotal + rapport.servicesTotal)}
+• Total des achats: ${formatMontant(rapport.achatsTotal)}
+• Bénéfice net: ${formatMontant((rapport.ventesTotal + rapport.servicesTotal) - rapport.achatsTotal)}
+🏆 TOP 5 PRODUITS PAR VALEUR DE STOCK
+${rapport.topProduits.map((p, i) =>
+    `${i+1}. ${p.nom} - Stock: ${p.stock} - Valeur: ${formatMontant(p.valeurStock)}`
+).join('\n')}
+📈 DONNÉES DÉTAILLÉES
+• Total ventes: ${ventes.length} transactions
+• Total services: ${services.length} services
+• Total achats: ${achats.length} achats
+Généré le ${new Date().toLocaleString('fr-FR')}
+                `.trim();
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `rapport_complet_alishashop_${new Date().toISOString().split('T')[0]}.txt`;
+            link.click();
+            URL.revokeObjectURL(url);
+            afficherNotification('Rapport complet généré!', 'success');
+        }
+
+        // Utilitaires
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            if (modalId === 'addAchatModal') {
+                remplirSelectProduits();
+            }
+        }
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+        function remplirSelectProduits() {
+            const select = document.getElementById('achatProduit');
+            select.innerHTML = '<option value="">Sélectionnez un produit</option>' +
+                produits.map(p => `<option value="${p.nom}">${p.nom}</option>`).join('');
+        }
+        function calculerAchat() {
+            const produitNom = document.getElementById('achatProduit').value;
+            const quantite = parseInt(document.getElementById('achatQuantite').value) || 0;
+            const prixAchat = parseInt(document.getElementById('achatPrix').value) || 0;
+            const total = quantite * prixAchat;
+            document.getElementById('totalAchat').textContent = formatMontant(total);
+            if (produitNom) {
+                const produit = produits.find(p => p.nom === produitNom);
+                if (produit) {
+                    const margeUnitaire = produit.prix - prixAchat;
+                    const margeTotale = margeUnitaire * quantite;
+                    document.getElementById('margePrevu').textContent = formatMontant(margeTotale);
+                }
+            }
+        }
+        function formatMontant(montant) {
+            return new Intl.NumberFormat('fr-FR', {
+                style: 'decimal',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(montant) + ' FCFA';
+        }
+        function afficherNotification(message, type = 'info') {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            container.appendChild(notification);
+            setTimeout(() => {
+                notification.style.animation = 'slideInFromRight 0.3s reverse';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        function exporterDonnees() {
+            const data = {
+                produits: produits,
+                ventes: ventes,
+                services: services,
+                achats: achats,
+                dateExport: new Date().toISOString()
+            };
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `alishashop_export_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+            afficherNotification('Données exportées avec succès!', 'success');
+        }
+
+        // Événements
+        document.getElementById('searchProduit').addEventListener('input', function() {
+            afficherProduits(this.value);
+        });
+        document.getElementById('searchStock').addEventListener('input', function() {
+            const filtre = this.value.toLowerCase();
+            const lignes = document.querySelectorAll('#stockTable tr');
+            lignes.forEach(ligne => {
+                const texte = ligne.textContent.toLowerCase();
+                ligne.style.display = texte.includes(filtre) ? '' : 'none';
+            });
+        });
+        ['photoNB', 'prixNB', 'photoCouleur', 'prixCouleur', 'impressions', 'prixImpression',
+         'reliures', 'prixReliure', 'montantAutres'].forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.addEventListener('input', calculerTotalReprographie);
+            }
+        });
+        ['achatProduit', 'achatQuantite', 'achatPrix'].forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.addEventListener('input', calculerAchat);
+                element.addEventListener('change', calculerAchat);
+            }
+        });
+        document.getElementById('addProductForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const nom = document.getElementById('produitNom').value.trim();
+            const prix = parseInt(document.getElementById('produitPrix').value);
+            const stock = parseInt(document.getElementById('produitStock').value);
+            if (!nom || prix < 0 || stock < 0) {
+                afficherNotification('Veuillez remplir tous les champs correctement!', 'error');
+                return;
+            }
+            if (produits.find(p => p.nom.toLowerCase() === nom.toLowerCase())) {
+                afficherNotification('Ce produit existe déjà!', 'error');
+                return;
+            }
+            produits.push({ nom, prix, stock });
+            sauvegarderDonnees(); // Sauvegarde asynchrone
+            this.reset();
+            closeModal('addProductModal');
+            afficherStock();
+            actualiserDashboard();
+            afficherNotification('Produit ajouté avec succès!', 'success');
+        });
+        document.getElementById('modifProductForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const nomOriginal = document.getElementById('modifProduitNomOriginal').value;
+            const nouveauNom = document.getElementById('modifProduitNom').value.trim();
+            const nouveauPrix = parseInt(document.getElementById('modifProduitPrix').value);
+            const nouveauStock = parseInt(document.getElementById('modifProduitStock').value);
+            if (!nouveauNom || nouveauPrix < 0 || nouveauStock < 0) {
+                afficherNotification('Veuillez remplir tous les champs correctement!', 'error');
+                return;
+            }
+            if (nouveauNom !== nomOriginal && produits.find(p => p.nom.toLowerCase() === nouveauNom.toLowerCase())) {
+                afficherNotification('Un produit avec ce nom existe déjà!', 'error');
+                return;
+            }
+            const produit = produits.find(p => p.nom === nomOriginal);
+            if (!produit) return;
+            produit.nom = nouveauNom;
+            produit.prix = nouveauPrix;
+            produit.stock = nouveauStock;
+            sauvegarderDonnees(); // Sauvegarde asynchrone
+            this.reset();
+            closeModal('modifProductModal');
+            afficherStock();
+            afficherProduits();
+            actualiserDashboard();
+            afficherNotification('Produit modifié avec succès!', 'success');
+        });
+        document.getElementById('addAchatForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const produitNom = document.getElementById('achatProduit').value;
+            const fournisseur = document.getElementById('achatFournisseur').value.trim();
+            const quantite = parseInt(document.getElementById('achatQuantite').value);
+            const prixAchat = parseInt(document.getElementById('achatPrix').value);
+            if (!produitNom || !fournisseur || quantite < 1 || prixAchat < 0) {
+                afficherNotification('Veuillez remplir tous les champs correctement!', 'error');
+                return;
+            }
+            const produit = produits.find(p => p.nom === produitNom);
+            if (!produit) return;
+            const achat = {
+                date: new Date().toISOString(),
+                produit: produitNom,
+                fournisseur: fournisseur,
+                quantite: quantite,
+                prixUnitaire: prixAchat,
+                total: quantite * prixAchat
+            };
+            achats.push(achat);
+            produit.stock += quantite;
+            sauvegarderDonnees(); // Sauvegarde asynchrone
+            this.reset();
+            closeModal('addAchatModal');
+            afficherHistoriqueAchats();
+            actualiserStatsAchats();
+            afficherStock();
+            afficherNotification('Achat enregistré et stock mis à jour!', 'success');
+        });
+
+        // Initialisation
+        window.addEventListener('DOMContentLoaded', async function() {
+            // Charger les données (d'abord locale, puis tenter cloud)
+            const donneesChargees = chargerDonnees();
+            if (!donneesChargees || produits.length === 0) {
+                initialiserProduitsFacture();
+            }
+            // Charger les données cloud après le chargement initial (optionnel, peut causer des conflits si plusieurs appareils modifient simultanément)
+            // await chargerDonneesCloud(); // Décommenter si vous voulez charger les données du cloud au démarrage
+
+            afficherProduits();
+            afficherStock();
+            actualiserDashboard();
+            afficherHistoriqueServices();
+            afficherHistoriqueAchats();
+            actualiserStatsAchats();
+            setTimeout(() => {
+                calculerTotalReprographie();
+            }, 100);
+            setInterval(() => {
+                sauvegarderDonnees(); // Sauvegarde périodique
+            }, 30000);
+        });
+        window.addEventListener('beforeunload', function() {
+            sauvegarderDonnees(); // Sauvegarde avant de quitter
+        });
+    </script>
+</body>
+</html>
+
